@@ -51,16 +51,21 @@
 
     #undef RGBLED_NUM
        
-    #define RGBLED_NUM 27
+    #define RGBLED_NUM 54
     // numero de LEDs en cada mitad
     
-    #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+    #undef RGBLED_SPLIT
     
+    #define RGBLED_SPLIT \
+        {27,27}
+       
     #define RGBLIGHT_EFFECT_BREATHING
     // incluyendo el efecto RGB breathing
     
-    #define RGBLIGHT_EFFECT_RAINBOW_MOOD
+    // #define RGBLIGHT_EFFECT_RAINBOW_MOOD
     // incluyendo el efecto RGB rainbow mood
+    
+    // #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
                
     #define RGBLIGHT_LIMIT_VAL 110
     // maximo valor para Value en HSV
