@@ -2,7 +2,7 @@
 
 # kb: crkbd
 
-# km: neoncorne
+# km: mario
 
 OLED_DRIVER_ENABLE = yes
 

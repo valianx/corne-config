@@ -19,23 +19,33 @@
 // keymap.c esta en lenguaje C
 
 // kb: crkbd
-
-// km: neoncorne
+// km: mario
 
 #include QMK_KEYBOARD_H
 
-// las capas en este keymap
-enum corne_layers {
+enum corne_layers { // las capas en este keymap
     _BASE,
     _LOWER,
     _RAISE,
-    _TUNE
+    _NUMBERS
 };
 
-// dando nombre de keycodes por definir
-enum {
-    LOWER,
-    RAISE
+enum custom_keycodes { // dando nombre de keycodes por definir
+    LOWER = SAFE_RANGE,
+    RAISE,
+    HUI,
+    HUD,
+};
+
+enum td_keycodes {
+    TD_CAPLOCK
+};
+
+// definiendo el keycode TD_CAPLOCK
+// un pulso: Left Shift
+// dos pulsos: Caps Lock
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_CAPLOCK] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS)
 };
 
 // Las keycodes en cada capa
@@ -46,7 +56,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        KC_LCTL,   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       KC_LSFT,   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ESC,
+TD(TD_CAPLOCK),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ESC,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                            KC_LGUI, LOWER, KC_SPC,       KC_ENT, RAISE, KC_RALT
                                       //`--------------------------'  `--------------------------'
@@ -55,11 +65,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LOWER] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-     KC_TAB,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_DEL,
+     KC_TAB, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                        XXXXXXX, XXXXXXX,   KC_UP,  XXXXXXX, XXXXXXX,XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-    KC_LCTL, XXXXXXX, KC_PGDN, KC_PGUP, KC_PSCREEN, KC_LGUI,                     KC_LEFT, KC_DOWN,  KC_UP, KC_RIGHT, KC_HOME, KC_END,
+    KC_LCTL, XXXXXXX,  KC_PGDN, KC_PGUP, KC_PSCREEN, KC_LGUI,                     XXXXXXX, KC_LEFT,  KC_DOWN, KC_RIGHT, KC_HOME, KC_END,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     KC_LSFT,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                          KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, KC_F11,
+     XXXXXXX,XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                        XXXXXXX, XXXXXXX,  XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                            KC_LGUI, _______, KC_SPC,     KC_ENT, RAISE, KC_RALT
                                       //`--------------------------'  `--------------------------'
@@ -71,96 +81,111 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL, KC_LBRC, KC_RBRC, KC_LCBR, KC_RCBR, KC_PIPE,                      KC_UNDS, KC_MINS, KC_PLUS,  KC_EQL, KC_BSLS,  KC_GRV,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAPS,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TILD,
+      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TILD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                             KC_LGUI, LOWER, KC_SPC,      KC_ENT, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
-
-  [_TUNE] = LAYOUT_split_3x6_3(
+    [_NUMBERS] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, RGB_M_P, RGB_M_B, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+     KC_TAB,  XXXXXXX,  KC_F1,   KC_F2,  KC_F3,   KC_F4,                          KC_0,    KC_1,    KC_2,    KC_3,   RGB_M_P,  RGB_M_B,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_TOG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX, XXXXXXX,
+    KC_LCTL,  XXXXXXX,  KC_F5,   KC_F6,  KC_F7,   KC_F8,                          XXXXXXX,  KC_4,    KC_5,    KC_6,   RGB_TOG,  HUI,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_MOD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+     KC_LSFT, XXXXXXX,  KC_F9,   KC_F10, KC_F11,  KC_F12,                        XXXXXXX,  KC_7,    KC_8,     KC_9,  XXXXXXX,  HUD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
+                                           KC_LGUI, _______, KC_SPC,     KC_ENT, RAISE, KC_RALT
                                       //`--------------------------'  `--------------------------'
   )
 };
 
-led_t led_usb_state;
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-
-    switch (get_highest_layer(state)) {
-    
-        case _TUNE:
-            if (!host_keyboard_led_state().caps_lock) {
-                rgblight_sethsv(HSV_WHITE);
-            }
-            break;    
-            
-        case _RAISE:
-            if (!host_keyboard_led_state().caps_lock) {
-                rgblight_sethsv(HSV_GREEN);
-            }
-            break;
-        
-        case _LOWER:
-            if (!host_keyboard_led_state().caps_lock) {
-                rgblight_sethsv(HSV_RED);
-            }    
-            break;
-                
-        case _BASE: 
-            if (!host_keyboard_led_state().caps_lock) {
-                rgblight_sethsv(HSV_BLUE);
-            }
-            break;    
-    }
-    
-    return state;
-}
-
-//extern uint8_t is_master;
-//extern uint8_t is_keyboard_master;
-
-led_t led_usb_state;
-
 #define WPM 15 // si current_wpm >= WPM entonces el gato empieza a tocar el keyboard
-
 #define ANIM_FRAME_DURATION 200 // cuanto tiempo mostrar cada frame
 #define ANIM_SIZE_DOG 96 // numero de pixeles en cada frame del perro
 #define ANIM_SIZE_CAT 320 // numero de pixeles en cada frame del gato
 
-uint32_t anim_timer = 0;
-uint32_t anim_sleep = 0;
+led_t led_usb_state;
 
-// current dog frame
-uint8_t current_dog_frame = 0;
+uint32_t anim_dog_timer;
+uint32_t anim_cat_timer;
+uint32_t anim_dog_sleep;
+uint32_t anim_cat_sleep;
 
-// current cat frame
-uint8_t current_cat_frame = 0;
+uint8_t current_dog_frame = 0; // current dog frame
+uint8_t current_cat_frame = 0; // current cat frame
+uint8_t current_wpm = 0; // current_wpm parte como 0
+uint8_t current_hue;
+uint8_t current_val;
+uint8_t hue_value;
+uint8_t sat_value;
+uint8_t val_value;
 
-// current_wpm parte como 0
-int current_wpm = 0;
-
-// variables bool y con que valor parten
 bool showedJump = true;
 bool isJumping = false;
 bool isSneaking = false;
 bool isWalking = false;
 bool isRunning = false;
 
-// esta funcion contiene los frames y logica de la animacion del perro
-static void render_dog(int DOG_X, int DOG_Y) {
+char hue_str[4];
+char sat_str[4];
+char val_str[4];
+char wpm_str[4];
 
-    // frames de sit
-    static const char PROGMEM sit[2][ANIM_SIZE_DOG] = {
-        // 'sit1' 32x22px
-        {
+/*
+#ifdef COLOR_PER_LAYER_ENABLE // si COLOR_PER_LAYER_ENABLE = yes en rules.mk
+    #include "color_per_layer.h"
+#endif
+*/
+
+void keyboard_post_init_user(void) {
+    current_hue = rgblight_get_hue();
+    current_val = RGBLIGHT_LIMIT_VAL;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+
+    switch (get_highest_layer(state)) {
+
+        case _NUMBERS:
+            if (!host_keyboard_led_state().caps_lock) {
+                rgblight_sethsv(HSV_WHITE);
+            }
+            break;
+
+        case _RAISE:
+            if (!host_keyboard_led_state().caps_lock) {
+                rgblight_sethsv(HSV_GREEN);
+            }
+            break;
+
+        case _LOWER:
+            if (!host_keyboard_led_state().caps_lock) {
+                rgblight_sethsv(HSV_RED);
+            }
+            break;
+
+        case _BASE:
+            if (!host_keyboard_led_state().caps_lock) {
+                rgblight_sethsv(current_hue, 255, current_val);
+            }
+            break;
+    }
+
+    return state;
+}
+
+void led_set_user(uint8_t usb_led) {
+    if (usb_led & (1<<USB_LED_CAPS_LOCK)) {
+        rgblight_sethsv(HSV_GOLD);
+    } else {
+        rgblight_sethsv(current_hue, 255, current_val);
+    }
+}
+
+static void render_dog(int DOG_X, int DOG_Y) { // esta funcion contiene los frames y logica de la animacion del perro
+
+    static const char PROGMEM sit[2][ANIM_SIZE_DOG] = { // frames de sit
+        { // 'sit1' 32x22px
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x1c,
             0x02, 0x05, 0x02, 0x24, 0x04, 0x04, 0x02, 0xa9, 0x1e, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x10, 0x08, 0x68, 0x10, 0x08, 0x04, 0x03, 0x00, 0x00,
@@ -169,8 +194,7 @@ static void render_dog(int DOG_X, int DOG_Y) {
             0x3e, 0x1c, 0x20, 0x20, 0x3e, 0x0f, 0x11, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         },
 
-        // 'sit2' 32x22px
-        {
+        { // 'sit2' 32x22px
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x1c,
             0x02, 0x05, 0x02, 0x24, 0x04, 0x04, 0x02, 0xa9, 0x1e, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x90, 0x08, 0x18, 0x60, 0x10, 0x08, 0x04, 0x03, 0x00, 0x00,
@@ -180,10 +204,8 @@ static void render_dog(int DOG_X, int DOG_Y) {
         }
     };
 
-    // frames de walk
-    static const char PROGMEM walk[2][ANIM_SIZE_DOG] = {
-        // 'walk1' 32x22px
-        {
+    static const char PROGMEM walk[2][ANIM_SIZE_DOG] = { // frames de walk
+        { // 'walk1' 32x22px
             0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x10, 0x90, 0x90, 0x90, 0xa0, 0xc0, 0x80, 0x80,
             0x80, 0x70, 0x08, 0x14, 0x08, 0x90, 0x10, 0x10, 0x08, 0xa4, 0x78, 0x80, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x08, 0xfc, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00,
@@ -192,8 +214,7 @@ static void render_dog(int DOG_X, int DOG_Y) {
             0x06, 0x18, 0x20, 0x20, 0x3c, 0x0c, 0x12, 0x1e, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         },
 
-        // 'walk2' 32x22px
-        {
+        { // 'walk2' 32x22px
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x20, 0x20, 0x40, 0x80, 0x00, 0x00, 0x00,
             0x00, 0xe0, 0x10, 0x28, 0x10, 0x20, 0x20, 0x20, 0x10, 0x48, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x1f, 0x20, 0xf8, 0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
@@ -203,10 +224,8 @@ static void render_dog(int DOG_X, int DOG_Y) {
         }
     };
 
-    // frames de run
-    static const char PROGMEM run[2][ANIM_SIZE_DOG] = {
-        // 'run1' 32x22px
-        {
+    static const char PROGMEM run[2][ANIM_SIZE_DOG] = { // frames de run
+        { // 'run1' 32x22px
             0x00, 0x00, 0x00, 0x00, 0xe0, 0x10, 0x08, 0x08, 0xc8, 0xb0, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
             0x80, 0x40, 0x40, 0x3c, 0x14, 0x04, 0x08, 0x90, 0x18, 0x04, 0x08, 0xb0, 0x40, 0x80, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0xc4, 0xa4, 0xfc, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00,
@@ -215,8 +234,7 @@ static void render_dog(int DOG_X, int DOG_Y) {
             0x02, 0x02, 0x04, 0x08, 0x10, 0x26, 0x2b, 0x32, 0x04, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00,
         },
 
-        // 'run2' 32x22px
-        {
+        { // 'run2' 32x22px
             0x00, 0x00, 0x00, 0xe0, 0x10, 0x10, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
             0x80, 0x80, 0x78, 0x28, 0x08, 0x10, 0x20, 0x30, 0x08, 0x10, 0x20, 0x40, 0x80, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x03, 0x04, 0x08, 0x10, 0x11, 0xf9, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00,
@@ -226,10 +244,8 @@ static void render_dog(int DOG_X, int DOG_Y) {
         }
     };
 
-    // frames de bark
-    static const char PROGMEM bark[2][ANIM_SIZE_DOG] = {
-        // 'bark1' 32x22px
-        {
+    static const char PROGMEM bark[2][ANIM_SIZE_DOG] = { // frames de bark
+        { // 'bark1' 32x22px
             0x00, 0xc0, 0x20, 0x10, 0xd0, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x40,
             0x3c, 0x14, 0x04, 0x08, 0x90, 0x18, 0x04, 0x08, 0xb0, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x03, 0x04, 0x08, 0x10, 0x11, 0xf9, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00,
@@ -238,8 +254,7 @@ static void render_dog(int DOG_X, int DOG_Y) {
             0x04, 0x08, 0x10, 0x26, 0x2b, 0x32, 0x04, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         },
 
-        // 'bark2' 32x22px
-        {
+        { // 'bark2' 32x22px
             0x00, 0xe0, 0x10, 0x10, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x40,
             0x40, 0x2c, 0x14, 0x04, 0x08, 0x90, 0x18, 0x04, 0x08, 0xb0, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x03, 0x04, 0x08, 0x10, 0x11, 0xf9, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00,
@@ -249,10 +264,8 @@ static void render_dog(int DOG_X, int DOG_Y) {
         }
     };
 
-    // frames de sneak
-    static const char PROGMEM sneak[2][ANIM_SIZE_DOG] = {
-        // 'sneak1' 32x22px
-        {
+    static const char PROGMEM sneak[2][ANIM_SIZE_DOG] = { // frames de sneak
+        { // 'sneak1' 32x22px
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0xc0, 0x40, 0x40, 0x80, 0x00, 0x80, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x1e, 0x21, 0xf0, 0x04, 0x02, 0x02, 0x02, 0x02, 0x03, 0x02, 0x02, 0x04,
@@ -261,8 +274,7 @@ static void render_dog(int DOG_X, int DOG_Y) {
             0x18, 0x20, 0x20, 0x38, 0x08, 0x10, 0x18, 0x04, 0x04, 0x02, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00,
         },
 
-        // 'sneak2' 32x22px
-        {
+        { // 'sneak2' 32x22px
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0xe0, 0xa0, 0x20, 0x40, 0x80, 0xc0, 0x20, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x3e, 0x41, 0xf0, 0x04, 0x02, 0x02, 0x02, 0x03, 0x02, 0x02, 0x02, 0x04,
@@ -272,11 +284,9 @@ static void render_dog(int DOG_X, int DOG_Y) {
         }
     };
 
-    // logica de la animacion del perro
-    void animate_dog(void) {
+    void animate_dog(void) { // logica de la animacion del perro
 
-        // si isJumping = true y showedJump = false
-        if (isJumping || !showedJump) {
+        if (isJumping || !showedJump) { // si isJumping = true y showedJump = false
 
             oled_set_cursor(DOG_X,DOG_Y +2);
             oled_write("     ", false);
@@ -285,8 +295,7 @@ static void render_dog(int DOG_X, int DOG_Y) {
 
             showedJump = true;
 
-        // si isJumping = true y showedJump = true
-        } else {
+        } else { // si isJumping = true y showedJump = true
 
             oled_set_cursor(DOG_X,DOG_Y -1);
             oled_write("     ", false);
@@ -295,83 +304,72 @@ static void render_dog(int DOG_X, int DOG_Y) {
         }
 
         // cada accion del perro (sit, walk, run, bark y sneak) tiene 2 frames
-        // con esta formula current_dog_frame toma los valores 1 y 0 los cuales se van turnando
-        current_dog_frame = (current_dog_frame + 1) % 2;
+        current_dog_frame = (current_dog_frame + 1) % 2; // con esta formula current_dog_frame toma los valores 1 y 0 los cuales se van turnando
 
-        // si esta activado Caps Lock
-        if(led_usb_state.caps_lock) { //KC_CAPS
+        if(led_usb_state.caps_lock) { // si esta activado Caps Lock
             oled_write_raw_P(bark[abs(1 - current_dog_frame)], ANIM_SIZE_DOG); // perro ladra
 
-        // Caps Lock desactivado y Left Control o Right Control presionado
-        } else if(isSneaking) { //KC_LCTL o KC_RCTL
+        } else if(isSneaking) { // Caps Lock desactivado y KC_LCTL o KC_RCTL presionado
             oled_write_raw_P(sneak[abs(1 - current_dog_frame)], ANIM_SIZE_DOG); // perro en sneaking
 
-        // Caps Lock desactivado, ningun Control presionado y Left Alt presionado
-        } else if(isWalking) { //KC_LALT
+        } else if(isWalking) { // Caps Lock desactivado, ningun Control presionado y KC_LALT presionado
             oled_write_raw_P(walk[abs(1 - current_dog_frame)], ANIM_SIZE_DOG); // perro camina
 
-        // Caps Lock desactivado, ningun Control presionado, Left Alt no presionado y AltGr presionado
-        } else if(isRunning) { //KC_RALT
+        } else if(isRunning) { // Caps Lock desactivado, ningun Control presionado, KC_LALT no presionado y KC_RALT presionado
             oled_write_raw_P(run[abs(1 - current_dog_frame)], ANIM_SIZE_DOG); // perro corre
 
-        // si no se cumple ninguna de las condiciones anteriores
-        } else {
+        } else { // si no se cumple ninguna de las condiciones anteriores
             oled_write_raw_P(sit[abs(1 - current_dog_frame)], ANIM_SIZE_DOG); // perro se sienta
         }
     }
 
-    if (current_wpm != 000) {
-        oled_on(); // not essential but turns on animation OLED with any alpha keypress
-        if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-            anim_timer = timer_read32();
+    if (current_wpm != 0) {
+        if (timer_elapsed32(anim_dog_timer) > ANIM_FRAME_DURATION) {
+            anim_dog_timer = timer_read32();
             animate_dog();
         }
-        anim_sleep = timer_read32();
-
+        anim_dog_sleep = timer_read32();
     } else {
-        if (timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
-            oled_off();
-        } else {
-            if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-                anim_timer = timer_read32();
-                animate_dog();
-            }
+        if (timer_elapsed32(anim_dog_timer) > ANIM_FRAME_DURATION) {
+            anim_dog_timer = timer_read32();
+            animate_dog();
         }
     }
 }
 
-/*
-    // cada 200ms se ejecuta animate_dog()
-    // es decir cada 200ms se cambio accion y/o frame
-    if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-        anim_timer = timer_read32();
-        animate_dog();
-    }
-
-    // this fixes the screen on and off bug
-    if (current_wpm > 0) {
-        oled_on();
-        anim_sleep = timer_read32();
-    } else if(timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
-        oled_off();
-    }
-
-}
-*/
-
-// esta funcion muestra las capas en el OLED y resalta la capa presente
-static void render_layer_state(void) {
-    oled_write_P(PSTR("RAISE"), layer_state_is(_RAISE) && !layer_state_is(_TUNE));
+static void render_layer(void) { // esta funcion muestra las capas en el OLED y resalta la capa presente
+    oled_write_P(PSTR("RAISE"), layer_state_is(_RAISE) && !layer_state_is(_NUMBERS));
     oled_write_P(PSTR("BASE\n"), layer_state_is(_BASE));
-    oled_write_P(PSTR("LOWER"), layer_state_is(_LOWER) && !layer_state_is(_TUNE));
-    oled_write_P(PSTR("TUNE\n"), layer_state_is(_TUNE));
+    oled_write_P(PSTR("LOWER"), layer_state_is(_LOWER) && !layer_state_is(_NUMBERS));
+    oled_write_P(PSTR("TUNE\n"), layer_state_is(_NUMBERS));
 }
 
-// esta funcion contiene los frames y logica de la animacion del gato
-static void render_cat(void) {
+static void render_hsv(void) {
+    oled_write("H ", false);
+    hue_str[3] = '\0';
+    hue_str[2] = '0' + hue_value % 10;
+    hue_str[1] = '0' + ( hue_value /= 10) % 10;
+    hue_str[0] = '0' + hue_value / 10;
+    oled_write(hue_str, false);
 
-    // frames de idle
-    static const char PROGMEM idle[1][ANIM_SIZE_CAT] = {
+    oled_write("S ", false);
+    sat_str[3] = '\0';
+    sat_str[2] = '0' + sat_value % 10;
+    sat_str[1] = '0' + ( sat_value /= 10) % 10;
+    sat_str[0] = '0' + sat_value / 10;
+    oled_write(sat_str, false);
+
+    oled_write("V ", false);
+    val_str[3] = '\0';
+    val_str[2] = '0' + val_value % 10;
+    val_str[1] = '0' + ( val_value /= 10) % 10;
+    val_str[0] = '0' + val_value / 10;
+    oled_write(val_str, false);
+}
+
+static void render_cat(void) { // esta funcion contiene los frames y logica de la animacion del gato
+
+    static const char PROGMEM idle[1][ANIM_SIZE_CAT] = { // frames de idle
         {
         0x00, 0xc0, 0x3e, 0x01, 0x00, 0x00, 0x00, 0xc0, 0xfc, 0x03, 0x00, 0x03, 0x0c, 0x30, 0xc0, 0x00,
         0xe1, 0x1e, 0x00, 0xc0, 0xbc, 0x83, 0x80, 0x80, 0x80, 0x80, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -396,8 +394,7 @@ static void render_cat(void) {
         }
     };
 
-    // frames de tap
-    static const char PROGMEM tap[2][ANIM_SIZE_CAT] = {
+    static const char PROGMEM tap[2][ANIM_SIZE_CAT] = { // frames de tap
         {
         0x00, 0xc0, 0x3e, 0x01, 0x00, 0x00, 0x00, 0xc0, 0xfc, 0xff, 0xff, 0xff, 0x7c, 0x70, 0x40, 0x40,
         0x61, 0x5e, 0x80, 0xc0, 0xbc, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -444,39 +441,39 @@ static void render_cat(void) {
         },
     };
 
-    // logica de la animacion del gato
-    void animate_cat(void) {
+    void animate_cat(void) { // logica de la animacion del gato
 
-        // si current_wpm menor a WPM
-        if(current_wpm < WPM){
+        if(current_wpm < WPM){ // si current_wpm menor a WPM
             oled_write_raw_P(idle[0], ANIM_SIZE_CAT); // gato en idle (solo hay un frame en esta accion)
          }
 
-         // si current_wpm mayor o igual a WPM
-         if(current_wpm >= WPM){
+         if(current_wpm >= WPM){ // si current_wpm mayor o igual a WPM
              current_cat_frame = (current_cat_frame + 1) % 2; //para alternar entre los 2 frames de tap
              oled_write_raw_P(tap[abs((2-1)-current_cat_frame)], ANIM_SIZE_CAT); // gato haciendo tap
          }
     }
 
-    if (current_wpm != 000) {
-        oled_on(); // not essential but turns on animation OLED with any alpha keypress
-        if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-            anim_timer = timer_read32();
+    if (current_wpm != 0) {
+        if (timer_elapsed32(anim_cat_timer) > ANIM_FRAME_DURATION) {
+            anim_cat_timer = timer_read32();
             animate_cat();
         }
-        anim_sleep = timer_read32();
-
+        anim_cat_sleep = timer_read32();
     } else {
-        if (timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
-            oled_off();
-        } else {
-            if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-                anim_timer = timer_read32();
-                animate_cat();
-            }
+        if (timer_elapsed32(anim_cat_timer) > ANIM_FRAME_DURATION) {
+            anim_cat_timer = timer_read32();
+            animate_cat();
         }
     }
+}
+
+static void render_wpm(void) {
+    oled_write("WPM\n", false);
+    wpm_str[3] = '\0';
+    wpm_str[2] = '0' + current_wpm % 10;
+    wpm_str[1] = '0' + ( current_wpm /= 10) % 10;
+    wpm_str[0] = '0' + current_wpm / 10;
+    oled_write(wpm_str, false); // printear valor de WPM
 }
 
 #ifdef OLED_DRIVER_ENABLE // si OLED_DRIVER_ENABLE = yes en rules.mk
@@ -495,84 +492,84 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 // el OLED es de 128x32 pixeles
 // cada page es de 8 pixeles a lo largo del lado con 128 px
 // por lo que hay 16 pages a lo largo de los 128 px
-static void dog_and_layers(void) { // funcion que agrupe lo del perro y lo de las capas
-    render_dog(0,2); // lo del perro se comienza a printear en el page 2
-    oled_set_cursor(0,6);
-    render_layer_state(); // lo de las capas se printea a partir del page 6
-}
-
-// funcion en la cual se indica que poner en cada OLED
-void oled_task_user(void) {
+void oled_task_user(void) { // funcion en la cual se indica que poner en cada OLED
 
     current_wpm = get_current_wpm();
+    hue_value = rgblight_get_hue();
+    sat_value = rgblight_get_sat();
+    val_value = rgblight_get_val();
+
+    if ( (timer_elapsed32(anim_dog_sleep) > 60000) && (timer_elapsed32(anim_cat_sleep) > 60000) && (current_wpm == 0) ) {
+        if (is_oled_on()) {
+            oled_off();
+        }
+        timer_init();
+        return;
+    }
+
+    if (current_wpm != 0 && !is_oled_on()) {
+        oled_on();
+    }
+
     led_usb_state = host_keyboard_led_state();
-    char wpm_str[4];
 
     if (is_keyboard_master()) { // OLED del master
-        dog_and_layers(); // lo del perro y capas
+        render_dog(0,1); // lo del perro
+        oled_set_cursor(0,5);
+        render_layer(); // lo de las capas
+        oled_set_cursor(0,10);
+        render_hsv(); // lo del HSV
     } else { // OLED del slave
         render_cat(); // lo del gato
         oled_set_cursor(0,11);
-        oled_write("WPM\n", false);
-        wpm_str[3] = '\0';
-        wpm_str[2] = '0' + current_wpm % 10;
-        wpm_str[1] = '0' + ( current_wpm /= 10) % 10;
-        wpm_str[0] = '0' + current_wpm / 10;
-        oled_write(wpm_str, false); // printear valor de WPM
+        render_wpm(); // lo del WPM
     }
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case KC_CAPS:
-            led_usb_state = host_keyboard_led_state();
-            if (record->event.pressed) { // al pulsar KC_CAPS
-                if (!led_usb_state.caps_lock) {
-                    rgblight_sethsv(HSV_GOLD);
-                    break;
-                } else {
-                    if (IS_LAYER_ON(_TUNE)) {
-                        rgblight_sethsv(HSV_WHITE);
-                        break;
-                    }
-                    if (IS_LAYER_ON(_RAISE)) {
-                        rgblight_sethsv(HSV_GREEN);
-                        break;
-                    }
-                    if (IS_LAYER_ON(_LOWER)) {
-                        rgblight_sethsv(HSV_RED);
-                        break;
-                    }
-                    if (IS_LAYER_ON(_BASE)) {
-                        rgblight_sethsv(HSV_BLUE);
-                    }
-                           
-                }            
+
+        case HUI:
+            if (record->event.pressed) {
+                current_hue = current_hue + 5;
+                if (current_hue > 255) {
+                    current_hue = current_hue - 256;
+                }
             } else {
-                break;
-            }    
-    
+                ;
+            }
+            return false;
+
+        case HUD:
+            if (record->event.pressed) {
+                current_hue = current_hue - 5;
+                if (current_hue < 0) {
+                    current_hue = 256 + current_hue;
+                }
+            } else {
+                ;
+            }
+            return false;
+
         case LOWER:
             if (record->event.pressed) {
                 layer_on(_LOWER);
-                update_tri_layer(_LOWER, _RAISE, _TUNE);
+                update_tri_layer(_LOWER, _RAISE, _NUMBERS);
             } else {
                 layer_off(_LOWER);
-                update_tri_layer(_LOWER, _RAISE, _TUNE);
+                update_tri_layer(_LOWER, _RAISE, _NUMBERS);
             }
             return false;
-            break;
 
         case RAISE:
             if (record->event.pressed) {
                 layer_on(_RAISE);
-                update_tri_layer(_LOWER, _RAISE, _TUNE);
+                update_tri_layer(_LOWER, _RAISE, _NUMBERS);
             } else {
                 layer_off(_RAISE);
-                update_tri_layer(_LOWER, _RAISE, _TUNE);
+                update_tri_layer(_LOWER, _RAISE, _NUMBERS);
             }
             return false;
-            break;
 
         case KC_LCTL:
         case KC_RCTL:
@@ -583,7 +580,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
 
-        case KC_LALT:
+        case KC_LGUI:
             if (record->event.pressed) {
                 isWalking = true;
             } else {

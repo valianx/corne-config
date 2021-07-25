@@ -22,11 +22,11 @@
 
 // kb: crkbd
 
-// km: neoncorne
+// km: mario
 
 #pragma once
 
-#define OLED_TIMEOUT 60000
+#define OLED_DISABLE_TIMEOUT
 
 // #define USE_MATRIX_I2C
 // #define MASTER_LEFT
